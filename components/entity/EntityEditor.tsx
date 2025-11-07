@@ -8,8 +8,12 @@ import {
   DataBaseEntityType,
   DataBaseEntityView,
   DataBaseEntityViewDetails,
+  DataBaseEntityViewFilterLayout,
+  DataBaseEntityViewFormLayout,
   DataBaseEntityViewTableComponent,
   DataBaseEntityViewTableFilter,
+  DataBaseEntityViewTableLayout,
+  DataBaseEntityViewViewLayout,
   FieldSpecialTypeList,
   FieldTypeList,
   RelFieldTypeList,
@@ -439,7 +443,9 @@ function FieldsTab({
               <label>Tipo</label>
               <select
                 value={draft.fieldType}
-                onChange={(event) => setDraft({ ...draft, fieldType: event.target.value })}
+                onChange={(event) =>
+                  setDraft({ ...draft, fieldType: event.target.value as FieldTypeList })
+                }
               >
                 {!FIELD_TYPE_OPTIONS.includes(draft.fieldType as FieldTypeList) ? (
                   <option value={draft.fieldType}>{draft.fieldType}</option>
@@ -474,9 +480,10 @@ function FieldsTab({
               <label>Tipo especial</label>
               <select
                 value={draft.fieldSpecialType ?? ""}
-                onChange={(event) =>
-                  setDraft({ ...draft, fieldSpecialType: event.target.value || undefined })
-                }
+                onChange={(event) => {
+                  const value = event.target.value as FieldSpecialTypeList;
+                  setDraft({ ...draft, fieldSpecialType: event.target.value ? value : undefined });
+                }}
               >
                 <option value="">Nenhum</option>
                 {draft.fieldSpecialType && !FIELD_SPECIAL_TYPE_OPTIONS.includes(draft.fieldSpecialType as FieldSpecialTypeList) ? (
@@ -639,7 +646,9 @@ function RelationshipsTab({
               <label>Tipo</label>
               <select
                 value={draft.fieldType}
-                onChange={(event) => setDraft({ ...draft, fieldType: event.target.value })}
+                onChange={(event) =>
+                  setDraft({ ...draft, fieldType: event.target.value as RelFieldTypeList })
+                }
               >
                 {!REL_FIELD_TYPE_OPTIONS.includes(draft.fieldType as RelFieldTypeList) ? (
                   <option value={draft.fieldType}>{draft.fieldType}</option>
@@ -1289,27 +1298,35 @@ function LayoutsEditor({
       <LayoutEditor
         title="Filtros"
         value={view.data.filterLayout}
-        onChange={(filterLayout) => update({ filterLayout })}
+        onChange={(filterLayout) =>
+          update({ filterLayout: filterLayout as DataBaseEntityViewFilterLayout | undefined })
+        }
         baseOptions={[...fieldOptions, ...relationshipOptions]}
         allowSubGroup
       />
       <LayoutEditor
         title="Tabela"
         value={view.data.tableLayout}
-        onChange={(tableLayout) => update({ tableLayout })}
+        onChange={(tableLayout) =>
+          update({ tableLayout: tableLayout as DataBaseEntityViewTableLayout | undefined })
+        }
         baseOptions={[...fieldOptions, ...relationshipOptions]}
       />
       <LayoutEditor
         title="Formulário"
         value={view.data.formLayout}
-        onChange={(formLayout) => update({ formLayout })}
+        onChange={(formLayout) =>
+          update({ formLayout: formLayout as DataBaseEntityViewFormLayout | undefined })
+        }
         baseOptions={[...fieldOptions, ...relationshipOptions]}
         allowTabs
       />
       <LayoutEditor
         title="Detalhes"
         value={view.data.viewLayout}
-        onChange={(viewLayout) => update({ viewLayout })}
+        onChange={(viewLayout) =>
+          update({ viewLayout: viewLayout as DataBaseEntityViewViewLayout | undefined })
+        }
         baseOptions={[...fieldOptions, ...relationshipOptions]}
       />
     </section>

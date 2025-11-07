@@ -24,7 +24,7 @@ export async function GET(
   }
 
   return NextResponse.json({
-    entities: project.entities.map((entity) => ({
+    entities: project.entities.map((entity: (typeof project.entities)[number]) => ({
       ...entity.toObject(),
       _id: entity._id.toString(),
     })),

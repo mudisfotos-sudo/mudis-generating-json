@@ -1,28 +1,33 @@
+import Link from "next/link";
 import "./globals.css";
 import type { Metadata } from "next";
-import { ReactNode } from "react";
+import type { ReactNode } from "react";
 
 export const metadata: Metadata = {
-  title: "ERP JSON Designer",
-  description: "Modela entidades de ERP e gera descrições em JSON",
+  title: "Mudis ERP",
+  description: "Modelagem visual de entidades ERP com geração automática de JSON.",
 };
 
 export default function RootLayout({ children }: { children: ReactNode }) {
   return (
     <html lang="pt-BR">
-      <body className="min-h-screen bg-slate-50 text-slate-900">
-        <div className="min-h-screen flex flex-col">
-          <header className="border-b border-slate-200 bg-white">
-            <div className="mx-auto flex w-full max-w-6xl items-center justify-between px-6 py-4">
-              <h1 className="text-lg font-semibold">ERP JSON Designer</h1>
-              <span className="text-sm text-slate-500">
-                Defina estruturas completas de entidades para o seu ERP
-              </span>
-            </div>
+      <body className="app-body">
+        <div className="app-shell">
+          <header className="app-header">
+            <Link href="/" className="app-brand" aria-label="Início Mudis ERP">
+              <img src="/mudis-logo.svg" alt="Logotipo Mudis ERP" className="app-brand__logo" />
+              <div className="app-brand__text">
+                <span className="app-brand__title">Mudis ERP</span>
+                <span className="app-brand__subtitle">Design de dados inteligente</span>
+              </div>
+            </Link>
+            <p className="app-header__caption">
+              Construa estruturas de entidades, relacionamentos e visões em minutos.
+            </p>
           </header>
-          <main className="mx-auto w-full max-w-6xl flex-1 px-6 py-10">{children}</main>
-          <footer className="border-t border-slate-200 bg-white py-4 text-center text-xs text-slate-500">
-            © {new Date().getFullYear()} ERP JSON Designer
+          <main className="app-main">{children}</main>
+          <footer className="app-footer">
+            © {new Date().getFullYear()} Mudis ERP. Todos os direitos reservados.
           </footer>
         </div>
       </body>

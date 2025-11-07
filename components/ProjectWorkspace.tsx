@@ -9,6 +9,7 @@ type ProjectWorkspaceProps = {
   name: string;
   description?: string;
   initialEntities: Array<DataBaseEntityType & { _id: string }>;
+  userEmail: string;
 };
 
 type EntitySummary = DataBaseEntityType & { _id: string };
@@ -18,7 +19,13 @@ type EditorState =
   | { mode: "create" }
   | { mode: "edit"; entityId: string };
 
-export function ProjectWorkspace({ projectId, name, description, initialEntities }: ProjectWorkspaceProps) {
+export function ProjectWorkspace({
+  projectId,
+  name,
+  description,
+  initialEntities,
+  userEmail,
+}: ProjectWorkspaceProps) {
   const [entities, setEntities] = useState<EntitySummary[]>(initialEntities);
   const [state, setState] = useState<EditorState>({ mode: "idle" });
   const [error, setError] = useState<string | null>(null);
@@ -106,85 +113,132 @@ export function ProjectWorkspace({ projectId, name, description, initialEntities
     }
   }
 
+  function startCreate() {
+    setError(null);
+    setSuccess(null);
+    setState({ mode: "create" });
+  }
+
+  function openEntity(entityId: string) {
+    setError(null);
+    setSuccess(null);
+    setState({ mode: "edit", entityId });
+  }
+
   return (
-    <div className="space-y-6">
-      <div className="card space-y-2">
-        <h2 className="text-2xl font-semibold">{name}</h2>
-        <p className="text-slate-600">{description || "Projeto sem descrição."}</p>
-        <div className="flex flex-wrap gap-2">
-          <button type="button" className="primary-button" onClick={() => setState({ mode: "create" })}>
-            Nova entidade
-          </button>
-          <button type="button" className="secondary-button" onClick={refreshEntities}>
-            Atualizar entidades
-          </button>
-        </div>
-      </div>
-
-      {error ? <div className="rounded-md border border-red-200 bg-red-50 px-4 py-2 text-sm text-red-700">{error}</div> : null}
-      {success ? <div className="rounded-md border border-emerald-200 bg-emerald-50 px-4 py-2 text-sm text-emerald-700">{success}</div> : null}
-
-      <div className="grid gap-6 lg:grid-cols-[320px_1fr]">
-        <aside className="space-y-3">
-          <div className="card space-y-3">
-            <h3 className="text-lg font-semibold">Entidades ({entities.length})</h3>
-            <div className="space-y-2">
-              {entities.length === 0 ? (
-                <p className="text-sm text-slate-600">Nenhuma entidade cadastrada.</p>
-              ) : (
-                entities.map((entity) => (
-                  <button
-                    key={entity._id}
-                    type="button"
-                    className={`w-full rounded-lg border px-3 py-2 text-left text-sm ${
-                      state.mode === "edit" && state.entityId === entity._id
-                        ? "border-indigo-400 bg-indigo-50 text-indigo-700"
-                        : "border-slate-200 bg-white text-slate-700"
-                    }`}
-                    onClick={() => setState({ mode: "edit", entityId: entity._id })}
-                  >
-                    <span className="block font-semibold">
-                      {entity.entityNameHumanized ?? entity.entityName ?? "Sem nome"}
-                    </span>
-                    <span className="block text-xs text-slate-500">{entity.entityName ?? ""}</span>
-                  </button>
-                ))
-              )}
+    <div className="workspace-shell">
+      <div className="workspace">
+        <aside className="workspace-sidebar" aria-label="Entidades do projeto">
+          <div className="workspace-sidebar-header">
+            <div>
+              <p className="workspace-sidebar-title">Entidades ({entities.length})</p>
+              <span className="workspace-sidebar-subtitle">
+                Estruture coleções, relacionamentos e visões personalizadas.
+              </span>
+            </div>
+            <div className="workspace-sidebar-actions">
+              <button type="button" className="secondary-button" onClick={refreshEntities}>
+                Recarregar
+              </button>
             </div>
           </div>
-        </aside>
-        <section className="space-y-4">
-          {state.mode === "idle" ? (
-            <div className="card">
-              <p className="text-sm text-slate-600">
-                Selecione uma entidade ou clique em "Nova entidade" para iniciar o mapeamento.
+          <div className="workspace-entity-list">
+            {entities.length === 0 ? (
+              <p className="workspace-empty">
+                Nenhuma entidade cadastrada. Clique em "Nova entidade" para começar a desenhar o modelo.
               </p>
-            </div>
-          ) : (
-            <div className="card">
-              <h3 className="text-xl font-semibold mb-4">
-                {state.mode === "create"
-                  ? "Cadastrar entidade"
-                  : `Editar entidade ${
-                      selectedEntity?.entityNameHumanized ?? selectedEntity?.entityName ?? ""
-                    }`}
-              </h3>
-              <EntityEditor
-                initialValue={selectedEntity as EntityEditorValue | undefined}
-                availableEntities={availableEntities}
-                onCancel={() => setState({ mode: "idle" })}
-                onSave={handleSave}
-              />
-              {state.mode === "edit" && selectedEntity ? (
-                <div className="mt-6 flex justify-end">
-                  <button type="button" className="danger-button" onClick={() => deleteEntity(selectedEntity._id)}>
-                    Excluir entidade
-                  </button>
+            ) : (
+              entities.map((entity) => (
+                <button
+                  key={entity._id}
+                  type="button"
+                  className={`workspace-entity-button${
+                    state.mode === "edit" && state.entityId === entity._id ? " active" : ""
+                  }`}
+                  onClick={() => openEntity(entity._id)}
+                >
+                  <span className="block text-sm font-semibold text-slate-700">
+                    {entity.entityNameHumanized ?? entity.entityName ?? "Sem nome"}
+                  </span>
+                  <span className="block text-xs text-slate-500">{entity.entityName ?? ""}</span>
+                </button>
+              ))
+            )}
+          </div>
+        </aside>
+
+        <div className="workspace-area">
+          <header className="workspace-topbar">
+            <div className="workspace-topbar-info">
+              <div className="workspace-topbar-brand">
+                <img src="/mudis-logo.svg" alt="Logotipo Mudis ERP" className="workspace-brand-logo" />
+                <div>
+                  <span className="workspace-brand-name">Mudis ERP</span>
+                  <span className="workspace-brand-subtitle">Modelagem de dados unificada</span>
                 </div>
-              ) : null}
+              </div>
+              <div className="workspace-project-meta">
+                <span className="workspace-project-label">Projeto selecionado</span>
+                <h1 className="workspace-project-name">{name}</h1>
+                <p className="workspace-project-description">{description || "Projeto sem descrição."}</p>
+              </div>
             </div>
-          )}
-        </section>
+            <div className="workspace-topbar-actions">
+              <button type="button" className="primary-button workspace-topbar-button" onClick={startCreate}>
+                Nova entidade
+              </button>
+              <div className="workspace-user">
+                <span className="workspace-user-label">Usuário autenticado</span>
+                <span className="workspace-user-email">{userEmail}</span>
+              </div>
+            </div>
+          </header>
+
+          <div className="workspace-main">
+            {error ? <div className="alert alert--error">{error}</div> : null}
+            {success ? <div className="alert alert--success">{success}</div> : null}
+
+            {state.mode === "idle" ? (
+              <div className="workspace-panel workspace-empty">
+                <p>
+                  Selecione uma entidade existente ao lado ou clique em "Nova entidade" para iniciar o mapeamento
+                  do seu domínio de ERP.
+                </p>
+              </div>
+            ) : (
+              <div className="workspace-panel space-y-6">
+                <div className="flex flex-wrap items-center justify-between gap-3">
+                  <h2 className="text-xl font-semibold">
+                    {state.mode === "create"
+                      ? "Cadastrar entidade"
+                      : `Editar entidade ${
+                          selectedEntity?.entityNameHumanized ?? selectedEntity?.entityName ?? ""
+                        }`}
+                  </h2>
+                  {state.mode === "edit" && selectedEntity ? (
+                    <button
+                      type="button"
+                      className="danger-button"
+                      onClick={() => deleteEntity(selectedEntity._id)}
+                    >
+                      Excluir entidade
+                    </button>
+                  ) : null}
+                </div>
+                <EntityEditor
+                  initialValue={selectedEntity as EntityEditorValue | undefined}
+                  availableEntities={availableEntities}
+                  onCancel={() => {
+                    setState({ mode: "idle" });
+                    setError(null);
+                    setSuccess(null);
+                  }}
+                  onSave={handleSave}
+                />
+              </div>
+            )}
+          </div>
+        </div>
       </div>
     </div>
   );

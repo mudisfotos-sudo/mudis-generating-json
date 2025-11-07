@@ -8,7 +8,7 @@ const fieldSchema = new Schema(
     fieldDefault: Schema.Types.Mixed,
     fieldType: {
       type: String,
-      enum: Object.values(FieldTypeList).concat(["String", "Number", "Boolean", "Date"]),
+      enum: [...(Object.values(FieldTypeList) as string[]), "String", "Number", "Boolean", "Date"],
       required: true,
     },
     fieldSpecialType: String,

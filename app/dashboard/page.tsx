@@ -6,6 +6,19 @@ import { ProjectModel } from "@/lib/models/Project";
 import { UserModel } from "@/lib/models/User";
 import { getSessionFromCookies } from "@/lib/session";
 
+type ProjectEntityRecord = Record<string, unknown> & {
+  _id?: { toString(): string };
+};
+
+type ProjectDocumentRecord = {
+  _id: { toString(): string };
+  name: string;
+  description?: string;
+  entities?: ProjectEntityRecord[];
+  updatedAt?: Date;
+  createdAt?: Date;
+};
+
 export default async function DashboardPage() {
   const session = getSessionFromCookies();
   if (!session) {
@@ -21,11 +34,13 @@ export default async function DashboardPage() {
     UserModel.findById(session.userId).lean(),
   ]);
 
-  if (!user) {
+  const userRecord = user as ({ email: string } & Record<string, unknown>) | null;
+
+  if (!userRecord) {
     redirect("/login");
   }
 
-  const serializedProjects = projects.map((project) => ({
+  const serializedProjects = (projects as ProjectDocumentRecord[]).map((project) => ({
     id: project._id.toString(),
     name: project.name,
     description: project.description ?? "",
@@ -38,6 +53,6 @@ export default async function DashboardPage() {
   }));
 
   return (
-    <DashboardClient initialProjects={serializedProjects} userEmail={user.email} />
+    <DashboardClient initialProjects={serializedProjects} userEmail={userRecord.email} />
   );
 }

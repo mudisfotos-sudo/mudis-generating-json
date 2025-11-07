@@ -102,7 +102,7 @@ export function DashboardClient({ initialProjects, userEmail }: DashboardClientP
   }
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 max-w-6xl w-full">
       <div className="card space-y-3">
         <div className="flex flex-wrap items-center justify-between gap-2">
           <div>
