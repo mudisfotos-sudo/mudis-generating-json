@@ -1,0 +1,26 @@
+<svg width="64" height="64" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="mudisLogoTitle mudisLogoDesc">
+  <title id="mudisLogoTitle">Logotipo Mudis ERP</title>
+  <desc id="mudisLogoDesc">Símbolo em formato de letra M com degradê roxo e detalhes futuristas</desc>
+  <defs>
+    <linearGradient id="mudisGradient" x1="8" y1="8" x2="56" y2="56" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#6366F1" />
+      <stop offset="1" stop-color="#7C3AED" />
+    </linearGradient>
+    <linearGradient id="mudisGlow" x1="16" y1="52" x2="48" y2="12" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#22D3EE" stop-opacity="0.9" />
+      <stop offset="1" stop-color="#6366F1" stop-opacity="0.2" />
+    </linearGradient>
+  </defs>
+  <rect x="6" y="6" width="52" height="52" rx="16" fill="url(#mudisGradient)" />
+  <path
+    d="M19 45V20.5C19 18.015 21.015 16 23.5 16C24.86 16 26.144 16.616 27 17.65L32 23.75L37 17.65C37.856 16.616 39.14 16 40.5 16C42.985 16 45 18.015 45 20.5V45C45 46.657 43.657 48 42 48C40.343 48 39 46.657 39 45V27.8L34.4 33.6C33.556 34.619 32.444 34.619 31.6 33.6L27 27.8V45C27 46.657 25.657 48 24 48C22.343 48 21 46.657 21 45H19Z"
+    fill="#FFFFFF"
+    fill-opacity="0.96"
+  />
+  <path
+    d="M18 44C23 49 41 49 46 44"
+    stroke="url(#mudisGlow)"
+    stroke-width="3.2"
+    stroke-linecap="round"
+  />
+</svg>

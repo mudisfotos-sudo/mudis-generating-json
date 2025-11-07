@@ -1,4 +1,4 @@
-# ERP JSON Designer
+# Mudis ERP
 
 Aplicação construída com Next.js para modelar entidades de um ERP por meio de descrições JSON. O sistema permite:
 
@@ -18,7 +18,7 @@ Aplicação construída com Next.js para modelar entidades de um ERP por meio de
 Crie um arquivo `.env.local` na raiz do projeto com os valores abaixo:
 
 ```env
-MONGODB_URI=mongodb://localhost:27017/erp-json-designer
+MONGODB_URI=mongodb://localhost:27017/mudis-erp
 AUTH_SECRET=alterar-para-um-segredo-seguro
 ```
 

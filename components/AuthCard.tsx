@@ -42,7 +42,7 @@ export function AuthCard({
   };
 
   return (
-    <div className="card max-w-md">
+    <div className="card max-w-md w-full">
       <h2 className="text-2xl font-semibold">{title}</h2>
       <p className="text-slate-600">{subtitle}</p>
       <form className="mt-6 space-y-4" onSubmit={handleSubmit}>
